@@ -1,17 +1,25 @@
 package com.example.jornadadaconquista
 
-import android.graphics.Paint.Align
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
-// import androidx.compose.material.Button
-// import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -86,24 +94,25 @@ fun JornadaDaConquista(){
             )
             Text("Você desistiu. Deseja tentar novamente? ")
             Row {
-                Button(onClick =  {reiniciarJogo() }) {
+                Button(onClick = { reiniciarJogo() }) {
                     Text("Sim")
                 }
                 this@Column.Button(onClick = {
                     Text("Não")
-                    }
-                )}
+                }
+                )
+            }
         }
     }
+
+}
+
+fun reiniciarJogo() {
+    var cliques = 0;
+    var estadoJogo = JogoEstado.INICIAL
 }
 
 
-
-
-fun reiniciarJogo() {
-        var cliques = 0;
-        var estadoJogo = JogoEstado.INICIAL
-    }
 enum class JogoEstado {
     INICIAL, MEDIANA, FINAL, CONQUISTA, DESISTENCIA
 }
