@@ -64,7 +64,7 @@ fun JornadaDaConquista(){
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(painter = painterResource(id = imagem), contentDescription = null, modifier = Modifier
-            .size(200.dp)
+            .size(450.dp)
             .clickable {
                 if (cliques < N) {
                     cliques++
@@ -90,7 +90,7 @@ fun JornadaDaConquista(){
             Image(
                 painter = painterResource(id = R.drawable.desistencia),
                 contentDescription = null,
-                modifier = Modifier.size(200.dp)
+                modifier = Modifier.size(500.dp)
             )
             Text("Você desistiu. Deseja tentar novamente? ")
             Row {
