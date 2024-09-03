@@ -58,6 +58,11 @@ fun JornadaDaConquista(){
         cliques >= (N * 0.33).toInt() -> R.drawable.mediana
         else -> R.drawable.inicial
     }
+
+    fun reiniciarJogo() {
+        cliques = 0;
+        estadoJogo = JogoEstado.INICIAL
+    }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -107,10 +112,6 @@ fun JornadaDaConquista(){
 
 }
 
-fun reiniciarJogo() {
-    var cliques = 0;
-    var estadoJogo = JogoEstado.INICIAL
-}
 
 
 enum class JogoEstado {
