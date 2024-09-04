@@ -25,45 +25,45 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GameScreen(
-                onExitApp = { finish() }
+                onSairApp = { finish() }
             )
         }
     }
 }
 
 @Composable
-fun GameScreen(onExitApp: () -> Unit) {
+fun GameScreen(onSairApp: () -> Unit) {
     // Define o número de cliques necessários para alcançar a conquista (valor aleatório entre 1 e 50)
-    var targetClicks by remember { mutableIntStateOf(Random.nextInt(1, 51)) }
+    var alvoCliques by remember { mutableIntStateOf(Random.nextInt(1, 51)) }
 
     // Contador de cliques do usuário
-    var clickCount by remember { mutableIntStateOf(0) }
+    var contaCliques by remember { mutableIntStateOf(0) }
 
     // Estado do jogo, exibindo mensagens ao usuário
-    var gameStatus by remember { mutableStateOf("Comece sua jornada!") }
+    var statusJogo by remember { mutableStateOf("Comece sua jornada!") }
 
     // Indica se o jogo foi concluído
-    var gameOver by remember { mutableStateOf(false) }
+    var jogoAcabou by remember { mutableStateOf(false) }
 
     // Indica se o jogador desistiu
-    var hasGivenUp by remember { mutableStateOf(false) }
+    var desistiu by remember { mutableStateOf(false) }
 
     // Efeito de clique na imagem
-    var imageClicked by remember { mutableStateOf(false) }
+    var imagemClicada by remember { mutableStateOf(false) }
 
     // Estado para controlar a exibição da imagem correspondente
-    val imageResId = when {
-        gameOver -> R.drawable.conquista // Imagem de conquista
-        hasGivenUp -> R.drawable.desistencia // Imagem de desistência
-        clickCount >= (targetClicks * 0.66).toInt() -> R.drawable.imgfinal // Imagem final
-        clickCount >= (targetClicks * 0.33).toInt() -> R.drawable.mediana // Imagem mediana
+    val imagemId = when {
+        jogoAcabou -> R.drawable.conquista // Imagem de conquista
+        desistiu -> R.drawable.desistencia // Imagem de desistência
+        contaCliques >= (alvoCliques * 0.66).toInt() -> R.drawable.imgfinal // Imagem final
+        contaCliques >= (alvoCliques * 0.33).toInt() -> R.drawable.mediana // Imagem mediana
         else -> R.drawable.inicial // Imagem inicial
     }
 
     // Animações
-    val scale by animateFloatAsState(if (imageClicked) 0.9f else 1f)
-    val rotation by animateFloatAsState(if (imageClicked) 10f else 0f)
-    val alpha by animateFloatAsState(if (imageClicked) 0.7f else 1f)
+    val escala by animateFloatAsState(if (imagemClicada) 0.9f else 1f)
+    val rotacao by animateFloatAsState(if (imagemClicada) 10f else 0f)
+    val transparencia by animateFloatAsState(if (imagemClicada) 0.7f else 1f)
 
     // Interface do jogo
     Column(
@@ -74,81 +74,81 @@ fun GameScreen(onExitApp: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = imageResId),
+            painter = painterResource(id = imagemId),
             contentDescription = null,
             modifier = Modifier
                 .size(200.dp)
                 .clip(RoundedCornerShape(50.dp)) // Bordas arredondadas
                 .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    rotationZ = rotation,
-                    alpha = alpha
+                    scaleX = escala,
+                    scaleY = escala,
+                    rotationZ = rotacao,
+                    alpha = transparencia
                 )
                 .clickable {
                     // Incrementa o número de cliques e verifica se o jogador alcançou a conquista
-                    if (!gameOver && !hasGivenUp) {
-                        clickCount++
-                        imageClicked = true
-                        if (clickCount >= targetClicks) {
-                            gameStatus = "Você alcançou sua conquista!"
-                            gameOver = true
+                    if (!jogoAcabou && !desistiu) {
+                        contaCliques++
+                        imagemClicada = true
+                        if (contaCliques >= alvoCliques) {
+                            statusJogo = "Você alcançou sua conquista!"
+                            jogoAcabou = true
                         }
                     }
                 }
         )
 
         // Reseta o estado de clique da imagem após um pequeno intervalo
-        LaunchedEffect(imageClicked) {
-            if (imageClicked) {
+        LaunchedEffect(imagemClicada) {
+            if (imagemClicada) {
                 kotlinx.coroutines.delay(150) // atraso de 150 ms para o efeito de clique
-                imageClicked = false
+                imagemClicada = false
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         when {
-            gameOver -> {
+            jogoAcabou -> {
                 Text(text = "Parabéns! Você alcançou a conquista!")
                 Button(onClick = {
-                    restartGame(
-                        resetClickCount = { clickCount = 0 },
-                        resetGameStatus = { gameStatus = "Comece sua jornada!" },
-                        resetGameOver = { gameOver = false },
-                        resetHasGivenUp = { hasGivenUp = false },
-                        resetTargetClicks = { targetClicks = Random.nextInt(1, 51) }
+                    reiniciarJogo(
+                        resetContaCliques = { contaCliques = 0 },
+                        resetStatusJogo = { statusJogo = "Comece sua jornada!" },
+                        resetJogoAcabou = { jogoAcabou = false },
+                        resetDesistiu = { desistiu = false },
+                        resetAlvoCliques = { alvoCliques = Random.nextInt(1, 51) }
                     )
                 }) {
                     Text("Novo Jogo")
                 }
             }
-            hasGivenUp -> {
+            desistiu -> {
                 Text(text = "Você desistiu. Deseja tentar novamente?")
                 Row {
                     Button(onClick = {
-                        restartGame(
-                            resetClickCount = { clickCount = 0 },
-                            resetGameStatus = { gameStatus = "Comece sua jornada!" },
-                            resetGameOver = { gameOver = false },
-                            resetHasGivenUp = { hasGivenUp = false },
-                            resetTargetClicks = { targetClicks = Random.nextInt(1, 51) }
+                        reiniciarJogo(
+                            resetContaCliques = { contaCliques = 0 },
+                            resetStatusJogo = { statusJogo = "Comece sua jornada!" },
+                            resetJogoAcabou = { jogoAcabou = false },
+                            resetDesistiu = { desistiu = false },
+                            resetAlvoCliques = { alvoCliques = Random.nextInt(1, 51) }
                         )
                     }) {
                         Text("Sim")
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    Button(onClick = onExitApp) {
+                    Button(onClick = onSairApp) {
                         Text("Não")
                     }
                 }
             }
             else -> {
-                Text(text = "Cliques: $clickCount / $targetClicks")
+                Text(text = "Cliques: $contaCliques / $alvoCliques")
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
-                    hasGivenUp = true
-                    gameStatus = "Você desistiu."
+                    desistiu = true
+                    statusJogo = "Você desistiu."
                 }) {
                     Text("Desistir")
                 }
@@ -158,23 +158,23 @@ fun GameScreen(onExitApp: () -> Unit) {
 }
 
 // Função para reiniciar o jogo
-fun restartGame(
-    resetClickCount: () -> Unit,
-    resetGameStatus: () -> Unit,
-    resetGameOver: () -> Unit,
-    resetHasGivenUp: () -> Unit,
-    resetTargetClicks: () -> Unit
+fun reiniciarJogo(
+    resetContaCliques: () -> Unit,
+    resetStatusJogo: () -> Unit,
+    resetJogoAcabou: () -> Unit,
+    resetDesistiu: () -> Unit,
+    resetAlvoCliques: () -> Unit
 ) {
     // Redefine todas as variáveis do jogo para o estado inicial
-    resetClickCount()
-    resetGameStatus()
-    resetGameOver()
-    resetHasGivenUp()
-    resetTargetClicks()
+    resetContaCliques()
+    resetStatusJogo()
+    resetJogoAcabou()
+    resetDesistiu()
+    resetAlvoCliques()
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    GameScreen(onExitApp = {})
+    GameScreen(onSairApp = {})
 }
