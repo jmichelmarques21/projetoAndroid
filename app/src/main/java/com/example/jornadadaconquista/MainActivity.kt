@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,23 +34,24 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun GameScreen(onSairApp: () -> Unit) {
+
     // Define o número de cliques necessários para alcançar a conquista (valor aleatório entre 1 e 50)
-    var alvoCliques by remember { mutableIntStateOf(Random.nextInt(1, 51)) }
+    var alvoCliques by rememberSaveable { mutableIntStateOf(Random.nextInt(1, 51)) }
 
     // Contador de cliques do usuário
-    var contaCliques by remember { mutableIntStateOf(0) }
+    var contaCliques by rememberSaveable { mutableIntStateOf(0) }
 
     // Estado do jogo, exibindo mensagens ao usuário
-    var statusJogo by remember { mutableStateOf("Comece sua jornada!") }
+    var statusJogo by rememberSaveable { mutableStateOf("Comece sua jornada!") }
 
     // Indica se o jogo foi concluído
-    var jogoAcabou by remember { mutableStateOf(false) }
+    var jogoAcabou by rememberSaveable { mutableStateOf(false) }
 
     // Indica se o jogador desistiu
-    var desistiu by remember { mutableStateOf(false) }
+    var desistiu by rememberSaveable { mutableStateOf(false) }
 
     // Efeito de clique na imagem
-    var imagemClicada by remember { mutableStateOf(false) }
+    var imagemClicada by rememberSaveable { mutableStateOf(false) }
 
     // Estado para controlar a exibição da imagem correspondente
     val imagemId = when {
